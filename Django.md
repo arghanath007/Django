@@ -1,15 +1,13 @@
-**Documentation Link** -> https://docs.djangoproject.com/en/4.0/
+**Django Docs** -> https://docs.djangoproject.com/en/4.0/
+**Django REST Framework Docs(DRF)** -> https://www.django-rest-framework.org/
 
 **Video Link** -> https://www.youtube.com/watch?v=PtQiiknWUcI&t=26s(1hr and 4mins done)
 
-**Course Link** -> Api with Django(Done till part 4)
+**Course Link** -> Views and Serializers(part 3 completed)
 
 ## To setup a Django Project
 
-1)Create a virtaul environment. Activate the 'venv' and install django in it. Do a pip freeze > requirement.txt, to create a file to keep track of the dependies we need for this project.
-2)**django-admin startproject movielist** -> This creates the Django project for us.
-3)**python manage.py startapp movielist_app** -> This creates apps which we need with Django.
-4)**python manage.py runserver** -> To run the django server locally on the machine.
+1)Create a virtual environment. Activate the 'venv' and install django in it. Do a pip freeze > requirement.txt, to create a file to keep track of the dependies we need for this project. 2)**django-admin startproject movielist** -> This creates the Django project for us. 3)**python manage.py startapp movielist_app** -> This creates apps which we need with Django. 4)**python manage.py runserver** -> To run the django server locally on the machine.
 
 # MVC
 
@@ -62,11 +60,9 @@ All of the views are going to be handled inside the views.py file from the app(b
 
 # Class Based View(CBV)
 
-
 ## Migrations
 
 Command -> **python manage.py migrate**
-
 
 ## Create Super User
 
@@ -74,11 +70,9 @@ Command -> **python manage.py migrate**
 
 Command to create a super user -> **python manage.py createsuperuser**
 
-
 **For MovieList Project**
 username -> arghanath
 password -> JohnWick@2000
-
 
 ## Converting the Models into SQL queries
 
@@ -88,7 +82,7 @@ Command -> **python manage.py makemigrations**
 
 ## Register the created model in the admin.py file
 
->Import the model into the admin.py file and then type the following line to register the model.
+> Import the model into the admin.py file and then type the following line to register the model.
 
 **admin.site.register(Movie)**
 
@@ -97,14 +91,63 @@ Command -> **python manage.py makemigrations**
 1)Class based View
 2)Function based View.
 
-
 ### Function based View
 
 def MovieList(request):
-    movies=Movie.objects.all() -> Selected all of the data in the form of query set.
-    data={
-            "movies":list(movies.values()) -> Extracted all of the data, then converted into a list and created a dictionary.
-        }
-    return JsonResponse(data) -> Converted the dictionary into JSON format with "JsonResponse" and send this dictionary.
+movies=Movie.objects.all() -> Selected all of the data in the form of query set.
+data={
+"movies":list(movies.values()) -> Extracted all of the data, then converted into a list and created a dictionary.
+}
+return JsonResponse(data) -> Converted the dictionary into JSON format with "JsonResponse" and send this dictionary.
 
 > Main motive was to convert queries into Python dictionary and then Python dictionary into JSON response.
+
+# Django REST Framework(DRF)
+
+> Two concepts in DRF are:
+
+1. Serializations -> Converting the **Complex Datatype**(movies=Movie.objects.all()) into **Python Native Datatype(Python Dictionary)**. After this we have to pass this dictionary in the form of JSON response. If we have to deliver information to the user, we are serializing.
+
+   ### Types of Serializations
+
+   1)ModelSerializer -> **serializers.ModelSerializer**
+   2)Serializer -> **serializers.Serializer**
+
+   **serializer=MovieSerializer(movies, many=True)** -> If we have multiple objects, then we have to use the **many=True**.
+
+2. DeSerializations -> When we need to get information from the user and store it in a database, during that part we need to deserialize the data. We get the data in the form of JSON and we convert it into a dictionary and then we have to deserialize it(dictionary) into **Complex Datatype** and store it in the database.
+
+# CRUD Operations
+
+## GET request
+
+> GET request is used to get the data from the database and send/show it to the user. We are going to return the response as the user needs information from the database
+
+## POST request
+
+> If we get POST request which means user is sending some information and we need to store it in the database.
+
+This is for POST request
+
+    def create(self, validated_data):
+            return Movie.objects.create(**validated_data)
+
+## PUT request
+
+> If we get PUT request then we are updating all of the fields/columns of that row of data in the database. We rewrite everything.
+
+    def update(self, instance, validated_data):
+            instance.name=validated_data.get('name', instance.name)
+            instance.description=validated_data.get('description', instance.description)
+            instance.active=validated_data.get('active', instance.active)
+            instance.save()
+            return instance
+
+## PATCH request
+
+> We are partially updating the fields of the data in the database. If we get data for one column then we will update that column of the data in the database.
+
+**def update(self, instance, validated_data):**
+
+instance -> This carries the old values
+validated_data -> This carries the new values

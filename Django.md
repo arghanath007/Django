@@ -151,3 +151,42 @@ This is for POST request
 
 instance -> This carries the old values
 validated_data -> This carries the new values
+
+# Files
+
+## setting.py
+
+> Main project configuration for the Django project. This is where all the configuration for all the apps that we add, the middlewares. This is where we configure the templates, set up the database and the connection to the database.
+
+## urls.py
+
+> This is the url navigation for the entire app. This is where we determine which routes users go to. These is where we configure how a user navigates the website.
+
+# WSGI -> Web Server Gateway Interface
+# ASGI -> Asynchronous Server Gateway Interface
+
+
+# Apps
+
+## models.py
+
+> Create the database tables
+
+## views.py
+
+> Where the bussiness logic goes, when the functions are triggered when the urls are activated.
+
+## admin.py
+
+> Configure the Admin Panel
+
+## apps.py
+
+> Main app's configuration.
+
+
+
+
+# Completed Check
+
+# The basics(video 1)

@@ -189,4 +189,4 @@ validated_data -> This carries the new values
 
 # Completed Check
 
-# The basics(video 1)
+# The basics(video 2)

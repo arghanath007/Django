@@ -1,4 +1,4 @@
-**Django Docs** -> https://docs.djangoproject.com/en/4.0/
+p**Django Docs** -> https://docs.djangoproject.com/en/4.0/
 **Django REST Framework Docs(DRF)** -> https://www.django-rest-framework.org/
 
 **Video Link** -> https://www.youtube.com/watch?v=PtQiiknWUcI&t=26s(1hr and 4mins done)
@@ -163,8 +163,8 @@ validated_data -> This carries the new values
 > This is the url navigation for the entire app. This is where we determine which routes users go to. These is where we configure how a user navigates the website.
 
 # WSGI -> Web Server Gateway Interface
-# ASGI -> Asynchronous Server Gateway Interface
 
+# ASGI -> Asynchronous Server Gateway Interface
 
 # Apps
 
@@ -184,9 +184,72 @@ validated_data -> This carries the new values
 
 > Main app's configuration.
 
+# Templates
 
+### 'DIRS': [
 
+            os.path.join(BASE_DIR, 'templates'),
+        ],
+
+> This just lets django know where the templates are. 'BASE_DIR' points to the root directory of the project.
+
+### return render(request, "projects.html")
+
+> Rendering the 'projects.html' template from the templates folder, as we have configured in the setting.py file where to look for the templates.
+
+### {% include 'navbar.html' %}
+
+> To include the navbar.html template into another template.
+
+### {% extends 'main.html' %}
+
+> Extending the 'main.html' template to the 'projects.html' template. So 'main.html' is the parent template and 'projects.html' is the child template.
+
+# Conditionals
+
+{% if number > 10 %}
+
+<p>The number: {{number}} is greater than 10</p>
+{% elif number == 10 %}
+<p>The number is equal to 10</p>
+{% else %}
+<p>The number: {{number}} is less than 10</p>
+{% endif %}
+
+> This is a conditional statement.
+
+# Database
+
+## python manage.py migrate
+
+> This is used to migrate the database or create tables for the first time.
+
+## To add a new table to the database.
+
+> When we add or update a model field or a model, we have to run the command **python manage.py makemigrations** and then run the command **python manage.py migrate**. To complete the migration.
+
+# Models
+
+> In Django, we model the data using classes.
+
+## models.py
+
+> We are going to create classes that are going to represent tables.
+
+### created=models.DateTimeField(auto_now_add=True)
+
+> Gives the date and time when the data is created. 'auto_now_add=True' means that the date and time will be automatically added when the data is created.
+
+### id=models.UUIDField(default=uuid.uuid4, unique=True, editable=False, primary_key=True)
+
+> Overrides the default behaviour of Django and gives the unique id for the data. 'editable=False' means that the id cannot be edited in a form. 'primary_key=True' means that the id is the primary key. We are overriding the default 'id' field given by the Django Model and using uuids instead.
+
+# Admin Panel
+
+### admin.site.register(Project)
+
+> To add the model to the admin page and how this model will be visible in the admin page.
 
 # Completed Check
 
-# The basics(video 2)
+# Building Database(video 2)

@@ -244,6 +244,16 @@ validated_data -> This carries the new values
 
 > Overrides the default behaviour of Django and gives the unique id for the data. 'editable=False' means that the id cannot be edited in a form. 'primary_key=True' means that the id is the primary key. We are overriding the default 'id' field given by the Django Model and using uuids instead.
 
+## Database Relationships
+
+### project= models.ForeignKey(Project, on_delete=models.CASCADE)
+
+> Relationship between the two models(Project and Review). 'Project' is the model name where we are creating the relationship. This is a **One to Many** relationship. 'on_delete=models.CASCADE' means that when the 'Project' model is deleted, the 'Review' model will be deleted as well. 'models.SET_NULL' means that the 'Review' model will be left alone and not deleted and the 'project' field will be set to 'Null' when the 'Project' model is deleted.
+
+### tags=models.ManyToManyField('Tag', blank=True)
+
+> Many To Many relationship between Project and Tag Model.
+
 # Admin Panel
 
 ### admin.site.register(Project)
@@ -252,4 +262,4 @@ validated_data -> This carries the new values
 
 # Completed Check
 
-# Building Database(video 2)
+# Building Database(video 3)

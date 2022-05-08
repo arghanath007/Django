@@ -1,9 +1,10 @@
 from django.urls import path
 
-from . import views
+from .views import projects, project, createProject
 
 urlpatterns = [
-    path('', views.projects, name='projects'),
-    path('project/<str:pk>/', views.project, name='project'), # 'pk' is the primary key. Dynamic Route
+    path('', projects, name='projects'),
+    path('project/<str:pk>/', project, name='project'), # 'pk' is the primary key. Dynamic Route
+    path('create-project/', createProject, name='create-project'),
 ]
  

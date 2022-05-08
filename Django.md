@@ -260,6 +260,43 @@ validated_data -> This carries the new values
 
 > To add the model to the admin page and how this model will be visible in the admin page.
 
+## Django Model Form
+
+> This is used to create a form for the model. It is a way to create a form based on a particular model.
+
+<form method="POST">
+  {% csrf_token %} {{form.as_p}}
+  <input type="submit" />
+</form>
+
+<form method="POST">
+  {% csrf_token %}
+  {{form.title.label}}
+  {{form.title}}
+  <input type="submit" />
+</form>
+
+> '{% csrf_token %}' this makes sure that the data wasn't manipulated i.e the data is safe and clean. Django automatically creates the form for us. We can use the 'as_p' method which is going to wrap '<p></p>' tags around each field in the form.
+
+    class ProjectForm(ModelForm):
+        class Meta:
+            model=Project
+            field='__add__'
+
+> Creating a form for the Project model. This is a way to create a form based on a particular model. '**all**' means that django is going to generate a field for every available attribute in the 'Project' model.
+
+# Steps to create a View
+
+1. Create the view.
+2. Create the template.
+3. Add the URL in the urls.py file
+
+
+# Resources
+
+## Django Model Form:
+
+> Link -> https://www.youtube.com/watch?v=VOddmV4Xl1g
 # Completed Check
 
-# Building Database(video 3)
+# CRUD(video 2)

@@ -3,37 +3,27 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 
-projectList=[{
-        'id':'1',
-        'title': 'E-commerce Website',
-        'description': 'This is a e-commerce website',
-    },{
-        'id':'2',
-        'title': 'Portfolio Website',
-        'description': 'My Personal Portfolio Website',
-    },{
-        'id':'3',
-        'title': 'Social Media Website',
-        'description': 'Some Random Open Source Social Media Website',
-    },]
+from .models import Project
+from .forms import ProjectForm
 
 
 def projects(request):
-    msg= 'This is the projects page'
-    number=10
-    
+    projects=Project.objects.all() # To get all the projects
     context={
-        'message':msg,
-        'number': number,
-        'projects': projectList,
+        'projects': projects,
     }
     return  render(request, "projects/projects.html", context)
 
 
 def project(request, pk):
-    projectObj=None
-    
-    for i in projectList:
-        if i['id']==pk:
-            projectObj=i
+    projectObj=Project.objects.get(id=pk) # To get the project with the id(pk)
+    # tags=projectObj.tags.all() # To get the tags of the project
     return  render(request, "projects/single-project.html",{'project':projectObj})
+
+
+def createProject(request):
+    form= ProjectForm()
+    context={
+        'form': form,
+    }
+    return render(request, "projects/project_form.html",context)

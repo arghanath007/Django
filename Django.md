@@ -276,6 +276,7 @@ validated_data -> This carries the new values
   <input type="submit" />
 </form>
 
+
 > '{% csrf_token %}' this makes sure that the data wasn't manipulated i.e the data is safe and clean. Django automatically creates the form for us. We can use the 'as_p' method which is going to wrap '<p></p>' tags around each field in the form.
 
     class ProjectForm(ModelForm):
@@ -283,7 +284,7 @@ validated_data -> This carries the new values
             model=Project
             field='__add__'
 
-> Creating a form for the Project model. This is a way to create a form based on a particular model. '**all**' means that django is going to generate a field for every available attribute in the 'Project' model.
+> Creating a form for the Project model. This is a way to create a form based on a particular model. '__all__' means that django is going to generate a field for every available attribute in the 'Project' model.
 
 # Steps to create a View
 
@@ -297,6 +298,36 @@ validated_data -> This carries the new values
 ## Django Model Form:
 
 > Link -> https://www.youtube.com/watch?v=VOddmV4Xl1g
+
+enctype="multipart/form-data"
+
+> This is to tell the form that we are going to upload files. Now the form will be able to submit the data(files).
+
+
+# Static Files
+> They are any kind of css, js, images or any kind of external files that we want to include in the project.
+
+## Add the CSS file in templates
+
+<link rel="stylesheet" href="{% static 'styles/main.css' %}">
+
+> This is how we include the CSS file in the templates.
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
+
+> This is to configure Django where to store the uploaded images. Otherwise Django will store them in the Root Directory and it will be messy. This is simply telling django where to store the uploaded content submitted by the users.
+
+### python manage.py collectstatic
+
+> This commands does is that it collects all the static files from the 'static' folder and the other static files which Django uses and bundles them together into a folder(prodstaticfiles) and then Django takes care from there.
+
+
+# Production
+
+DEBUG = False 
+
+>In 'DEBUG = False' or in Production mode, Django is looking at 'prodstaticfiles' folder instead of 'staticfiles' which Django was looking at in Development or 'DEBUG = True' mode.
+
 # Completed Check
 
-# CRUD(video 2)
+# 05 Static Files & Theme Installation(video 2)

@@ -28,8 +28,9 @@ SECRET_KEY = 'django-insecure-cr2-4$@$2xkd(hjc3-t)t82se4%n##_er)f$kubat-udb+%kui
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+# DEBUG = False  # In 'DEBUG = False' or in Production mode, Django is looking at 'prodstaticfiles' folder instead of 'staticfiles' which Django was looking at in Development mode or 'DEBUG = True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', 'my_domain_name.com']
 
 
 # Application definition
@@ -43,12 +44,17 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # 'base.apps.BaseConfig',
-    
-    'projects.apps.ProjectsConfig', # Django Project knows about the 'projects' app.
+
+    # Django Project knows about the 'projects' app.
+    'projects.apps.ProjectsConfig',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+
+    # Third Party Library, 'White Noise', to serve static files in production mode in Django.
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -63,7 +69,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, 'templates'), # This just lets django know where the templates are.
+            # This just lets django know where the templates are.
+            os.path.join(BASE_DIR, 'templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -126,8 +133,21 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
+MEDIA_URL = '/images/'  # Default is MEDIA_URL = ''
+
+STATICFILES_DIRS = [
+    # os.path.join(BASE_DIR, 'static'), Old way of doing this.
+    BASE_DIR / 'static',
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# This is to configure Django where to store the uploaded images. Otherwise Django will store them in the Root Directory and it will be messy. This is simply telling django where to store the user uploaded content.
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
+
+# This is telling Django where the static files of the production are stored.
+STATIC_ROOT = os.path.join(BASE_DIR, 'prodstaticfiles')

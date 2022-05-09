@@ -1,27 +1,21 @@
-"""DjangoProject URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/4.0/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path, include
 
+# For getting  the 'MEDIA_URL' and 'MEDIA_ROOT' from the 'settings.py' file.
+from django.conf import settings
 
+# This will create a new url for the static files.
+from django.conf.urls.static import static
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('projects.urls'))
-    
+    path('', include('projects.urls')),
+
 ]
- 
+
+# To get the media or static files from the 'static' folder in development mode.
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# To get the media or static files from the 'prodstaticfiles' folder in production mode.
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

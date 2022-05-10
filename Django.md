@@ -328,6 +328,12 @@ DEBUG = False
 
 >In 'DEBUG = False' or in Production mode, Django is looking at 'prodstaticfiles' folder instead of 'staticfiles' which Django was looking at in Development or 'DEBUG = True' mode.
 
+# Pluralize
+
+<span style="font-weight: bold;">{{ project.vote_ratio }}%</span> Positive Feedback ({{ project.vote_total }} Vote{{project.vote_total|pluralize:"s"}})
+
+> 'pluralize' is a filter that is used to pluralize the word. It means that there are multiple votes. '({{ project.vote_total }} Vote{{project.vote_total|pluralize:"s"}})' this means that if the 'vote_total' is more than one(1) then add in the 's' to the word(vote), otherwise just say 'vote'.
+
 # Completed Check
 
-# 05 Static Files & Theme Installation(video 2)
+# 06 Add More Apps(video 1)

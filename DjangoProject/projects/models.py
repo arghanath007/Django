@@ -1,10 +1,16 @@
-from email.policy import default
 from django.db import models
 import uuid
+
+from users.models import Profile
 # Create your models here.
 
 
 class Project(models.Model):
+
+    # Connect Project to a specific user. One to Many Relationship.(Many Projects to One User)
+    owner = models.ForeignKey(
+        Profile, on_delete=models.SET_NULL, null=True, blank=True)
+
     title = models.CharField(max_length=200)
 
     # null=True means that the field is optional. 'null' is set to 'false' by default. 'null' is for the database. 'blank' is for the form(django to know). 'blank=True' means that we are allowed to submit a form with description's value being empty when 'filling a form' or doing a 'post' request.

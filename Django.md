@@ -303,6 +303,10 @@ enctype="multipart/form-data"
 
 > This is to tell the form that we are going to upload files. Now the form will be able to submit the data(files).
 
+## User Model in Django
+
+> Docs -> https://docs.djangoproject.com/en/4.0/ref/contrib/auth/
+
 
 # Static Files
 > They are any kind of css, js, images or any kind of external files that we want to include in the project.
@@ -333,6 +337,9 @@ DEBUG = False
 <span style="font-weight: bold;">{{ project.vote_ratio }}%</span> Positive Feedback ({{ project.vote_total }} Vote{{project.vote_total|pluralize:"s"}})
 
 > 'pluralize' is a filter that is used to pluralize the word. It means that there are multiple votes. '({{ project.vote_total }} Vote{{project.vote_total|pluralize:"s"}})' this means that if the 'vote_total' is more than one(1) then add in the 's' to the word(vote), otherwise just say 'vote'.
+
+
+
 
 # Completed Check
 

@@ -47,6 +47,8 @@ INSTALLED_APPS = [
 
     # Django Project knows about the 'projects' app.
     'projects.apps.ProjectsConfig',
+    # Django Project knows about the 'users' app.
+    'users.apps.UsersConfig',
 ]
 
 MIDDLEWARE = [

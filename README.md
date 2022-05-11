@@ -334,6 +334,3 @@ DEBUG = False
 
 > 'pluralize' is a filter that is used to pluralize the word. It means that there are multiple votes. '({{ project.vote_total }} Vote{{project.vote_total|pluralize:"s"}})' this means that if the 'vote_total' is more than one(1) then add in the 's' to the word(vote), otherwise just say 'vote'.
 
-# Completed Check
-
-# 06 Add More Apps(video 1)

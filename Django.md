@@ -58,7 +58,23 @@ All of the views are going to be handled inside the views.py file from the app(b
 
 ## Dynamic URL routing
 
+
+# Function Based View(FBV)
+
+**Steps to create a View(Function Based View)**
+
+1. Create the view.
+2. Create the template.
+3. Add the URL in the urls.py file
+
 # Class Based View(CBV)
+
+**Steps to create a View(Class Based View)**
+
+1. Create a Model, in models.py file
+2. Create the view.
+3. Create the template.
+4. Add the URL in the urls.py file
 
 ## Migrations
 
@@ -286,12 +302,6 @@ validated_data -> This carries the new values
 
 > Creating a form for the Project model. This is a way to create a form based on a particular model. '__all__' means that django is going to generate a field for every available attribute in the 'Project' model.
 
-# Steps to create a View
-
-1. Create the view.
-2. Create the template.
-3. Add the URL in the urls.py file
-
 
 # Resources
 
@@ -306,6 +316,83 @@ enctype="multipart/form-data"
 ## User Model in Django
 
 > Docs -> https://docs.djangoproject.com/en/4.0/ref/contrib/auth/
+
+## Signals
+
+**def profileUpdated(sender, instance, created, **kwargs):**
+    print('Profile Saved')
+
+>Receiver. Function to be triggered. 'sender' is the model that is actually sending the signal. 'instance' is the instance of the model that actually triggered this. 'created' will be a boolean value(True or False) depending on if the user was added or a model was added to the database or the model was simply saved again. It lets us know if a new record was added to the database or not.
+
+**post_save.connect(profileUpdated, sender=Profile)**
+
+>'profileUpdated' is the function we want to trigger. 'sender=Profile' is the model that is sending or triggering the signal. 'post_save' is the signal that is being sent. So anytime 'save' method is called on the Profile model, after the 'save' method is complete, the model is saved. The 'profileUpdated' function will be triggered.
+
+
+
+**from django.db.models.signals import post_save, post_delete**
+
+> Importing the Signals
+
+**from django.dispatch import receiver**
+
+> Importing the Decorator of the signals.
+
+
+**Sending a signal if the Profile was updated or a new Profile was created**
+
+@receiver(post_save, sender=Profile)
+def profileUpdated(sender, instance, created, **kwargs):
+    print('Profile Saved')
+    print('Sender:', sender)
+    print('Instance:', instance)
+    print('Created:', created)
+
+> Using Decorators.
+
+
+def profileUpdated(sender, instance, created, **kwargs):
+    print('Profile Saved')
+    print('Sender:', sender)
+    print('Instance:', instance)
+    print('Created:', created)
+
+
+>Receiver. Function to be triggered. 'sender' is the model that is actually sending the signal. 'instance' is the instance of the model that actually triggered this. 'created' will be a boolean value(True or False) depending on if the user was added or a model was added to the database or the model was simply saved again. It lets us know if a new record was added to the database or not.
+
+
+post_save.connect(profileUpdated, sender=Profile)
+
+>'profileUpdated' is the function we want to trigger. 'sender=Profile' is the model that is sending or triggering the signal. 'post_save' is the signal that is being sent. So anytime 'save' method is called on the Profile model, after the 'save' method is complete, the model(Profile) is saved. The 'profileUpdated' function will be triggered after the model is saved.
+
+
+
+**Deleting a user if the user profile is deleted**
+
+def deleteUser(sender, instance, **kwargs):
+    print('Deleting User...')
+    print('Sender:', sender)
+    print('Instance:', instance)
+
+>In this function, any time we delete a profile, we also want to delete the user.
+
+
+post_delete.connect(deleteUser, sender=Profile)
+
+>This is triggered whenever a 'Profile' is deleted. So when a 'Profile' is deleted, the user is also deleted.
+
+
+@receiver(post_delete, sender=Profile)
+def deleteUser(sender, instance, **kwargs):
+    print('Deleting User...')
+    print('Sender:', sender)
+    print('Instance:', instance)
+
+
+>Using Decorators.
+
+
+
 
 
 # Static Files
@@ -338,9 +425,47 @@ DEBUG = False
 
 > 'pluralize' is a filter that is used to pluralize the word. It means that there are multiple votes. '({{ project.vote_total }} Vote{{project.vote_total|pluralize:"s"}})' this means that if the 'vote_total' is more than one(1) then add in the 's' to the word(vote), otherwise just say 'vote'.
 
+# Slice Filter:
+
+{{profile.bio|slice:"150"}}
+
+> This is a filter that is used to slice or for trimming down the text. It means that it will slice the text after the number(150) of characters specified.
 
 
+# Queries in Django
 
-# Completed Check
+<div class="dev__skills">
+  {% for skill in profile.skill_set.all %}
+    <span class="tag tag--pill tag--main">
+        <small>{{skill}}</small>
+    </span>
+  {% endfor %}
+</div>
 
-# 06 Add More Apps(video 1)
+
+<div class="project__tags">
+{% for tag in project.tags.all %}
+    <span class="tag tag--pill tag--main">
+        <small>{{tag}}</small>
+    </span>
+{% endfor %}
+</div>
+
+> Since Many To Many Relationship
+
+> This is a query that is used to get the skills of the profile of the user. This is how we query a child(skill model) set of objects using the parent model(profile model). '_set.all' means that we are getting all the objects(skills) in the set.
+
+
+**topSkills = profile.skill_set.exclude(description__exact="")**
+
+> We are getting all the skills from the profile object and excluding the skills that have an empty description. **description__exact=""** means that the description is empty. '_set.exclude' means that we are excluding/not including the skills that have an empty description. Exclude all of the skills that have an empty description and store the rest of them here(topSkills).
+
+
+**otherSkills = profile.skill_set.filter(description="")**
+
+> This gives us all the values(skills) that have an empty description. '_set.filter' means that we are filtering the skills that have an empty description. Gives us all the skills that have an empty string as the description are stored here(otherSkills).
+
+
+# Starting Tomorrow
+
+# 07 Authentication(video 1)

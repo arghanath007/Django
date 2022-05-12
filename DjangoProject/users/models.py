@@ -15,6 +15,7 @@ class Profile(models.Model):
     name = models.CharField(max_length=100, null=True, blank=True)
     email = models.CharField(max_length=200, null=True, blank=True)
     username = models.CharField(max_length=100, null=True, blank=True)
+    location = models.CharField(max_length=100, null=True, blank=True)
     about = models.CharField(max_length=200, null=True, blank=True)
     bio = models.TextField(null=True, blank=True)
     profile_image = models.ImageField(
@@ -31,3 +32,23 @@ class Profile(models.Model):
 
     def __str__(self):
         return str(self.user.username)
+
+
+class Skill(models.Model):
+
+    # Connect Skill to a specific user. One to Many Relationship.(Many Skills to One Profile). Profile is the parent model.
+    owner = models.ForeignKey(
+        Profile, on_delete=models.CASCADE, null=True, blank=True)
+
+    # Name of the Skill
+    name = models.CharField(max_length=200, null=True,
+                            blank=True)
+
+    # Description of the Skill or what I used the skill for. What did I do with it. What do I know about it.
+    description = models.TextField(null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+    id = models.UUIDField(default=uuid.uuid4, unique=True,
+                          editable=False, primary_key=True)
+
+    def __str__(self):
+        return self.name

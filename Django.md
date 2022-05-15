@@ -465,7 +465,70 @@ DEBUG = False
 
 > This gives us all the values(skills) that have an empty description. '_set.filter' means that we are filtering the skills that have an empty description. Gives us all the skills that have an empty string as the description are stored here(otherSkills).
 
+# Login, Logout User
+
+## Authentication
+
+> Authentication is simply determining who a user is. We are trying to identify a particular user. Login form. Authentication is, who is the user?
+
+## Authorization
+
+> Authorization is simply determining what a user is allowed to do on the website. We are trying to determine if a particular user is allowed to do something. Example, restricting unauthorized users only to a few pages. Some pages will be authorized to logged in users only. Restricting access based on the role of the user in the website like Admin, Manager, Developer, General-User etc.
+
+**user = authenticate(request, username=username, password=password)**
+
+> 'authenticate()' will take the 'username' and the 'password' and it will male sure that the password matches the 'username'. It will return either the 'user' instance or 'None'.
+
+
+**login(request, user)**
+
+>'login()' create a session for the user in the database.
+
+**logout(request)**
+
+
+>This is going to delete the session of the logged in user.
+
+
+
+**from django.contrib.auth.decorators import login_required**
+
+    @login_required(login_url='login')
+    def createProject(request):
+
+
+> This is a decorator that is used to restrict the access to the page to logged in users only. If the user is not logged in, then it will redirect the user to the login page.
+
+
+**{% if request.user.is_authenticated %}**
+
+
+> This is a template tag that is used to check if the user is logged in or not.
+
+
+
+
+# Django Messages FrameWork
+
+**messages.error(request, 'Username or password is incorrect')**
+
+> Sending a flash message to the user
+
+
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+
+> Template to display the flash messages to the user.
+            
+        
+
 
 # Starting Tomorrow
 
-# 07 Authentication(video 1)
+# 07 Authentication(video 2)

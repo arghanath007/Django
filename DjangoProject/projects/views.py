@@ -2,9 +2,10 @@
 
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 
-from .models import Project
-from .forms import ProjectForm
+from projects.models import Project
+from projects.forms import ProjectForm
 
 
 # To see all the projects
@@ -27,7 +28,8 @@ def project(request, pk):
 
 
 # Create a New Project
-
+# Sending/redirecting the user back to the login page if they are not logged in.
+@login_required(login_url='login')
 def createProject(request):
     form = ProjectForm()
 
@@ -46,7 +48,7 @@ def createProject(request):
 
 
 # To update a Project
-
+@login_required(login_url='login')
 def updateProject(request, pk):
     project = Project.objects.get(id=pk)  # To get the project with the id(pk)
     # Prefill all the form fields with the data of the project
@@ -64,7 +66,7 @@ def updateProject(request, pk):
 
 
 # To delete a Project
-
+@login_required(login_url='login')
 def deleteProject(request, pk):
     project = Project.objects.get(id=pk)
 

@@ -3,12 +3,16 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
+# from django.contrib.auth.forms import UserCreationForm
 
 
 from users.models import Profile
+from users.forms import CustomUserCreationForm
 
 
 def loginUser(request):
+
+    page = 'login'
 
     if request.user.is_authenticated:
         return redirect('profiles')
@@ -41,6 +45,28 @@ def logoutUser(request):
     logout(request)
     messages.error(request, 'User was logged out successfully')
     return redirect('login')
+
+
+def registerUser(request):
+    page = 'register'
+    form = CustomUserCreationForm()
+
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            # Gives us an instance of the form but doesn't save it to the database.
+            user = form.save(commit=False)
+            user.username = user.username.lower()
+            user.save()
+            messages.success(request, 'User was created successfully')
+            login(request, user)
+            return redirect('profiles')
+
+        else:
+            messages.error(request, 'Error occurred during registration')
+
+    context = {'page': page, 'form': form}
+    return render(request, 'users/login_register.html', context)
 
 
 def profiles(request):

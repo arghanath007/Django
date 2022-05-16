@@ -303,6 +303,11 @@ validated_data -> This carries the new values
 > Creating a form for the Project model. This is a way to create a form based on a particular model. '__all__' means that django is going to generate a field for every available attribute in the 'Project' model.
 
 
+**from django.contrib.auth.forms import UserCreationForm**
+
+> This is basically a model form based around the user and it's designed to actually add a user to the database.
+
+
 # Resources
 
 ## Django Model Form:
@@ -531,4 +536,4 @@ DEBUG = False
 
 # Starting Tomorrow
 
-# 07 Authentication(video 2)
+# 07 Authentication(video 3)

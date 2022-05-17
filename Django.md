@@ -308,6 +308,13 @@ validated_data -> This carries the new values
 > This is basically a model form based around the user and it's designed to actually add a user to the database.
 
 
+## Help Text in UserCreationForm()
+
+{% if field.help_text %}
+    <small>{{field.help_text}}</small>
+{% endif %}
+
+
 # Resources
 
 ## Django Model Form:
@@ -317,6 +324,11 @@ validated_data -> This carries the new values
 enctype="multipart/form-data"
 
 > This is to tell the form that we are going to upload files. Now the form will be able to submit the data(files).
+
+
+form = ProfileForm(request.POST, request.FILES, instance=request.user.profile)
+>'request.FILES' For processing images in forms.
+
 
 ## User Model in Django
 
@@ -530,10 +542,26 @@ DEBUG = False
 
 
 > Template to display the flash messages to the user.
+
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+        <div class="alert alert--{{message.tags}}">
+            <p class="alert__message">{{message}}</p>
+            <button class="alert__close">X</button>
+        </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+> Custom Styled Messages
             
         
 
 
 # Starting Tomorrow
 
-# 07 Authentication(video 3)
+# 08 User Actions(video 3)

@@ -7,7 +7,7 @@ from django.contrib import messages
 
 
 from users.models import Profile
-from users.forms import CustomUserCreationForm
+from users.forms import CustomUserCreationForm, ProfileForm
 
 
 def loginUser(request):
@@ -43,7 +43,7 @@ def logoutUser(request):
 
     # This is going to delete the session of the logged in user.
     logout(request)
-    messages.error(request, 'User was logged out successfully')
+    messages.info(request, 'User was logged out successfully')
     return redirect('login')
 
 
@@ -60,7 +60,7 @@ def registerUser(request):
             user.save()
             messages.success(request, 'User was created successfully')
             login(request, user)
-            return redirect('profiles')
+            return redirect('edit-account')
 
         else:
             messages.error(request, 'Error occurred during registration')
@@ -88,3 +88,37 @@ def userProfile(request, pk):
         'otherSkills': otherSkills
     }
     return render(request, 'users/user-profile.html', context)
+
+
+@login_required(login_url='login')
+def userAccount(request):
+
+    # Get the profile of the logged in user. Using the One to One relationship
+    profile = request.user.profile
+    skills = profile.skill_set.all()
+    projects = profile.project_set.all()
+
+    context = {'profile': profile,
+               'skills': skills,
+               'projects': projects,
+               }
+    return render(request, 'users/account.html', context)
+
+
+@login_required(login_url='login')
+def editAccount(request):
+    profile = request.user.profile
+    # Instance is the profile of the logged in user. This will prefill the form with the data of the logged in user.
+    form = ProfileForm(instance=profile)
+
+    if request.method == 'POST':
+        # 'request.FILES' For processing images in forms.
+        form = ProfileForm(request.POST, request.FILES,
+                           instance=profile)
+
+        if form.is_valid():
+            form.save()
+            return redirect('user-account')
+
+    context = {'form': form}
+    return render(request, 'users/profile_form.html', context)

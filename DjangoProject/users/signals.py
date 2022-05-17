@@ -22,6 +22,20 @@ def createProfile(sender, instance, created, **kwargs):
 post_save.connect(createProfile, sender=User)
 
 
+def updateUser(sender, instance, created, **kwargs):
+    profile = instance
+    user = profile.user
+
+    if created == False:  # Checking to see if it's not the first instance of the profile.
+        user.first_name = profile.name
+        user.username = profile.username
+        user.email = profile.email
+        user.save()
+
+
+post_save.connect(updateUser, sender=Profile)
+
+
 def deleteUser(sender, instance, **kwargs):
     # Getting the 'User' of the deleted 'Profile'. 'instance' is the 'Profile' here
     user = instance.user

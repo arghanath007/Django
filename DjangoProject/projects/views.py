@@ -32,14 +32,22 @@ def project(request, pk):
 @login_required(login_url='login')
 def createProject(request):
     form = ProjectForm()
-
+    # Getting the currently logged in user.
+    profile = request.user.profile
     if request.method == 'POST':
         # print(request.POST)
         form = ProjectForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+
+            # Instance of the current project
+            project = form.save(commit=False)
+
+            # Connecting the newly created project to the logged in user.
+            project.owner = profile
+            project.save()
+
             # Redirecting the user back to the 'projects' page.
-            return redirect('projects')
+            return redirect('user-account')
 
     context = {
         'form': form,
@@ -50,7 +58,9 @@ def createProject(request):
 # To update a Project
 @login_required(login_url='login')
 def updateProject(request, pk):
-    project = Project.objects.get(id=pk)  # To get the project with the id(pk)
+    profile = request.user.profile
+    # Getting the projects of the logged in user only.
+    project = profile.project_set.get(id=pk)
     # Prefill all the form fields with the data of the project
     form = ProjectForm(instance=project)
 
@@ -59,7 +69,7 @@ def updateProject(request, pk):
         form = ProjectForm(request.POST, request.FILES, instance=project)
         if form.is_valid:
             form.save()
-            return redirect('project', pk=pk)
+            return redirect('user-account', pk=pk)
 
     context = {'form': form}
     return render(request, 'projects/project_form.html', context)
@@ -68,7 +78,9 @@ def updateProject(request, pk):
 # To delete a Project
 @login_required(login_url='login')
 def deleteProject(request, pk):
-    project = Project.objects.get(id=pk)
+    profile = request.user.profile
+    # Only the owner/logged in user can delete the project.
+    project = profile.project_set.get(id=pk)
 
     if request.method == 'POST':
         project.delete()
@@ -77,4 +89,4 @@ def deleteProject(request, pk):
     context = {
         'object': project,
     }
-    return render(request, 'projects/delete_template.html', context)
+    return render(request, 'delete_template.html', context)

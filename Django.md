@@ -59,6 +59,22 @@ All of the views are going to be handled inside the views.py file from the app(b
 ## Dynamic URL routing
 
 
+### HardCoded Link
+<a class="btn btn--sub btn--lg  my-md" href="{% url 'projects' %}">Go Back</a>
+
+
+### Dynamic Link
+
+<a class="tag tag--pill tag--main settings__btn" href="{% url 'delete-skill' skill.id %}?next=/account"><i class="im im-x-mark-circle-o"></i>Delete</a>
+
+> '?next=/account' is the query string though which we are accessing the 'next' value. Here the 'next' value is set to the 'account' page. When we click on the above link, '?next=/account' extra value will be appended to the link.
+
+
+<a class="btn btn--sub btn--lg  my-md" href="{{request.GET.next}}">Go Back</a>
+
+> There is a 'next' value that we can access.
+
+
 # Function Based View(FBV)
 
 **Steps to create a View(Function Based View)**
@@ -564,4 +580,4 @@ DEBUG = False
 
 # Starting Tomorrow
 
-# 08 User Actions(video 3)
+# 09 Search & Pagination(video 1)

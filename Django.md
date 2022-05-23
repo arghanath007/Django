@@ -574,6 +574,59 @@ DEBUG = False
     {% endif %}
 
 > Custom Styled Messages
+
+
+
+# Search & Pagination
+
+## Django Filter 
+
+
+profiles = Profile.objects.filter(name__icontains=search_query, about__icontains=search_query)
+
+> Get all the profiles which matches the 'search query'. 'icontains' is case insensitive. 'contains' means it has to be with the word not exactly/perfectly. So cases don't matter.'about__icontains=search_query' is searching in the 'about' field of the 'Profile' model. Here this is saying that if the 'search_query' is found in both 'about' and the 'name' field of the 'Profile' model, then only it will be included in the search results. 'search_query' has to be in both the fields(name, about) for that profile to show up in the search results. This is like an 'AND' method.
+
+
+skills = Skill.objects.filter(name__iexact=search_query)
+
+> 'iexact' is case insensitive. So cases don't matter. 'exact' means it has to match exactly/perfectly with the 'search_query'.
+
+
+
+
+
+## Q Lookup
+
+> Helps extend the searches. Look up the profile by either the 'name' or the 'about' field. We can filter by child objects as well.
+
+**Resource -> https://django-filter.readthedocs.io/en/stable/**
+
+
+from django.db.models import Q
+
+> Import statement for the 'Q' class.
+
+
+profiles = Profile.objects.filter(Q(name__icontains=search_query) | Q(about__icontains=search_query))
+
+> '|' OR operator. This is like an 'OR' method. Either the 'name' or the 'about' field of the profile has to contain the 'search_query' for that profile to show up in the search results.
+
+
+profiles = Profile.objects.filter(
+        Q(name__icontains=search_query) | Q(about__icontains=search_query) | Q(skill__in=skills))
+
+> Get multiple instances of a profile because of the skills. As there are multiple skills.
+    
+
+### distinct()
+
+> When we get a query set, it makes sure that we don't get duplicate results. We return back only one table for each instance or one table object.
+
+ profiles = Profile.objects.distinct().filter(
+        Q(name__icontains=search_query) | Q(about__icontains=search_query) | Q(skill__in=skills))
+
+> Get one instance of each user.
+
             
         
 

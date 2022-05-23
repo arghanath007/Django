@@ -1,14 +1,17 @@
 from gettext import install
+import imp
+import sqlite3
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
-# from django.contrib.auth.forms import UserCreationForm
 
 
 from users.models import Profile
 from users.forms import CustomUserCreationForm, ProfileForm, SkillForm
+
+from users.utils import searchProfiles
 
 
 def loginUser(request):
@@ -71,9 +74,11 @@ def registerUser(request):
 
 
 def profiles(request):
-    profiles = Profile.objects.all()  # Get all the profiles from the database
+
+    profiles, search_query = searchProfiles(request)
     context = {
-        'profiles': profiles
+        'profiles': profiles,
+        'search': search_query,
     }
     return render(request, 'users/profiles.html', context)
 
@@ -91,7 +96,7 @@ def userProfile(request, pk):
     return render(request, 'users/user-profile.html', context)
 
 
-@login_required(login_url='login')
+@ login_required(login_url='login')
 def userAccount(request):
 
     # Get the profile of the logged in user. Using the One to One relationship
@@ -106,7 +111,7 @@ def userAccount(request):
     return render(request, 'users/account.html', context)
 
 
-@login_required(login_url='login')
+@ login_required(login_url='login')
 def editAccount(request):
     profile = request.user.profile
     # Instance is the profile of the logged in user. This will prefill the form with the data of the logged in user.
@@ -125,7 +130,7 @@ def editAccount(request):
     return render(request, 'users/profile_form.html', context)
 
 
-@login_required(login_url='login')
+@ login_required(login_url='login')
 def createSkill(request):
     profile = request.user.profile
     form = SkillForm()
@@ -143,7 +148,7 @@ def createSkill(request):
     return render(request, 'users/skill_form.html', context)
 
 
-@login_required(login_url='login')
+@ login_required(login_url='login')
 def updateSkill(request, pk):
     profile = request.user.profile
     skill = profile.skill_set.get(id=pk)  # Get the skill we want to update.
@@ -159,7 +164,7 @@ def updateSkill(request, pk):
     return render(request, 'users/skill_form.html', context)
 
 
-@login_required(login_url='login')
+@ login_required(login_url='login')
 def deleteSkill(request, pk):
     profile = request.user.profile
     skill = profile.skill_set.get(id=pk)  # Get the skill we want to delete.

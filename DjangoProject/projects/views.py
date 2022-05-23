@@ -3,17 +3,23 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 
 from projects.models import Project
 from projects.forms import ProjectForm
+from projects.utils import searchProjects
 
 
 # To see all the projects
 
 def projects(request):
-    projects = Project.objects.all()  # To get all the projects
+
+    # projects = Project.objects.all()  # To get all the projects
+
+    projects, search_query = searchProjects(request)
     context = {
         'projects': projects,
+        'search': search_query
     }
     return render(request, "projects/projects.html", context)
 

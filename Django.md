@@ -579,7 +579,9 @@ DEBUG = False
 
 # Search & Pagination
 
-## Django Filter 
+
+## Search
+### Django Filter 
 
 
 profiles = Profile.objects.filter(name__icontains=search_query, about__icontains=search_query)
@@ -595,7 +597,7 @@ skills = Skill.objects.filter(name__iexact=search_query)
 
 
 
-## Q Lookup
+### Q Lookup
 
 > Helps extend the searches. Look up the profile by either the 'name' or the 'about' field. We can filter by child objects as well.
 
@@ -618,7 +620,7 @@ profiles = Profile.objects.filter(
 > Get multiple instances of a profile because of the skills. As there are multiple skills.
     
 
-### distinct()
+#### distinct()
 
 > When we get a query set, it makes sure that we don't get duplicate results. We return back only one table for each instance or one table object.
 
@@ -627,7 +629,33 @@ profiles = Profile.objects.filter(
 
 > Get one instance of each user.
 
-            
+
+
+## Pagination
+
+class Meta:
+    ordering = ['created']
+
+
+> By default, it is ordered descending. So the oldest projects will be at the top.
+
+
+class Meta:
+    ordering = ['-created']
+
+
+> Ascending order.
+
+
+{% include 'pagination.html' with querySet=projects %}
+
+> Passing down props/properties to the template(pagination.html). 'querySet=projects' is the name of the variable that we are passing down to the template. This is like a key-value pair.
+
+{% include 'pagination.html' with querySet=projects custom_range=custom_range %}
+
+> Passing two values 'querySet=projects' and 'custom_range=custom_range' to the template.
+
+
         
 
 

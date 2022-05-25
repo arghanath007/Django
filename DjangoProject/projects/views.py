@@ -4,10 +4,12 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.core.paginator import Paginator
+
 
 from projects.models import Project
 from projects.forms import ProjectForm
-from projects.utils import searchProjects
+from projects.utils import searchProjects, paginateProjects
 
 
 # To see all the projects
@@ -17,9 +19,13 @@ def projects(request):
     # projects = Project.objects.all()  # To get all the projects
 
     projects, search_query = searchProjects(request)
+
+    custom_range, projects = paginateProjects(request, projects, 1)
+
     context = {
         'projects': projects,
-        'search': search_query
+        'search': search_query,
+        'custom_range': custom_range,
     }
     return render(request, "projects/projects.html", context)
 

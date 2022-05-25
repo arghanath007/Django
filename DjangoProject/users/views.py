@@ -11,7 +11,7 @@ from django.contrib import messages
 from users.models import Profile
 from users.forms import CustomUserCreationForm, ProfileForm, SkillForm
 
-from users.utils import searchProfiles
+from users.utils import searchProfiles, paginateProfiles
 
 
 def loginUser(request):
@@ -76,9 +76,13 @@ def registerUser(request):
 def profiles(request):
 
     profiles, search_query = searchProfiles(request)
+
+    custom_range, profiles = paginateProfiles(request, profiles, 1)
+
     context = {
         'profiles': profiles,
         'search': search_query,
+        'custom_range': custom_range
     }
     return render(request, 'users/profiles.html', context)
 

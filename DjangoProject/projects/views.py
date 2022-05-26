@@ -5,10 +5,11 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.core.paginator import Paginator
+from django.contrib import messages
 
 
 from projects.models import Project
-from projects.forms import ProjectForm
+from projects.forms import ProjectForm, ReviewForm
 from projects.utils import searchProjects, paginateProjects
 
 
@@ -20,7 +21,7 @@ def projects(request):
 
     projects, search_query = searchProjects(request)
 
-    custom_range, projects = paginateProjects(request, projects, 1)
+    custom_range, projects = paginateProjects(request, projects, 3)
 
     context = {
         'projects': projects,
@@ -35,8 +36,24 @@ def projects(request):
 def project(request, pk):
     # To get the project with the id(pk)
     projectObj = Project.objects.get(id=pk)
+    form = ReviewForm()
+
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        review = form.save(commit=False)
+        review.project = projectObj
+        review.owner = request.user.profile
+        review.save()
+
+        # Update Project vote count
+
+        projectObj.getVoteCount
+
+        messages.success(request, 'Your review has been added!')
+        return redirect('project', pk=pk)
+
     # tags=projectObj.tags.all() # To get the tags of the project
-    return render(request, "projects/single-project.html", {'project': projectObj})
+    return render(request, "projects/single-project.html", {'project': projectObj, 'form': form})
 
 
 # Create a New Project

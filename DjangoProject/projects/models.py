@@ -1,3 +1,4 @@
+from enum import unique
 from django.db import models
 import uuid
 
@@ -7,7 +8,7 @@ from users.models import Profile
 
 class Project(models.Model):
 
-    # Connect Project to a specific user. One to Many Relationship.(Many Projects to One User)
+    # Connect Project to a specific user. One(Profile) to Many(Project) Relationship.(Many Projects to One User)
     owner = models.ForeignKey(
         Profile, on_delete=models.SET_NULL, null=True, blank=True)
 
@@ -39,7 +40,30 @@ class Project(models.Model):
         return self.title
 
     class Meta:
-        ordering = ['-created']  # Ascending order
+        ordering = ['-vote_ratio', '-vote_total', 'title']  # Ascending order
+
+    # We can run it as a attribute and not as an actual method.
+    @property
+    def getVoteCount(self):
+        # Getting all the reviews
+        reviews = self.review_set.all()
+        upVotes = reviews.filter(value='up').count()
+        totalVotes = reviews.count()
+
+        ratio = (upVotes/totalVotes) * 100
+
+        self.vote_total = totalVotes
+        self.vote_ratio = ratio
+
+        self.save()
+
+    # This gives an entire list of Ids of people who reviewed this particular project.
+
+    @property
+    def reviewers(self):
+        querySet = self.review_set.all().values_list('owner__id', flat=True)
+
+        return querySet
 
 
 class Review(models.Model):
@@ -47,7 +71,8 @@ class Review(models.Model):
         ('up', 'Up Vote'),
         ('down', 'Down Vote'),
     )
-    # owner
+    owner = models.ForeignKey(
+        Profile, on_delete=models.CASCADE, null=True)
     # Relationship between the two models(Project and Review). One to Many Relationship.
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     body = models.TextField(null=True, blank=True)
@@ -55,6 +80,10 @@ class Review(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     id = models.UUIDField(default=uuid.uuid4, unique=True,
                           editable=False, primary_key=True)
+
+    # 'owner' and 'project' have to be unique. No instance of a review can have the same owner and the same project.
+    class Meta:
+        unique_together = [['owner', 'project']]
 
     def __str__(self):
         return self.value

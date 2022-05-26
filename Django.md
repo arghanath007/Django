@@ -75,6 +75,11 @@ All of the views are going to be handled inside the views.py file from the app(b
 > There is a 'next' value that we can access.
 
 
+<a href="{% url 'login' %}?next={{request.path}}"> Login</a>
+
+> 'request.path' just takes a snapshot of where the user is currently at and it will be passed as a parameter to the 'login' url.
+
+
 # Function Based View(FBV)
 
 **Steps to create a View(Function Based View)**
@@ -656,9 +661,36 @@ class Meta:
 > Passing two values 'querySet=projects' and 'custom_range=custom_range' to the template.
 
 
+
+
+## Conditional Rendering
+
+{% if request.user.profile.id in project.reviewers %}
+
+    <p>You have already submitted your review for this project</p>
+
+> If the reviewer(user) already left a review. Then they won't be able to review again.
+
+{% elif request.user.profile == project.owner %}
+
+    <p>You cannot review your own project</p>
+
+> If the reviewer(user) is the owner of the project. They can't review their own project.
+
+{% elif request.user.is_authenticated %}
+
+> If the user is logged in then slow the form to leave a review.
+
+{% else %}
+    <a href="{% url 'login' %}?next={{request.path}}">Please Login To Leave Review</a>
+
+> otherwise show link to login form.
+
+
+
         
 
 
 # Starting Tomorrow
 
-# 09 Search & Pagination(video 2)
+# 11 Sending Emails & Password Reset(video 1)

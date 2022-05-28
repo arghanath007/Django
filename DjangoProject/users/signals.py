@@ -1,6 +1,9 @@
-from users.models import Profile
-
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
+
+
+from users.models import Profile
+from django.conf import settings
 
 
 # Create some kind of receive and sender that's going to fire off any time the 'save' method is called on the user 'Profile'.
@@ -17,6 +20,17 @@ def createProfile(sender, instance, created, **kwargs):
         # We are automatically connecting the new profile we're creating to the user that triggered it.
         profile = Profile.objects.create(
             user=user, username=user.username, email=user.email, name=user.first_name)
+
+        subject = 'Welcome to DevSearch'
+        message = 'Welcome to DevSearch, {}!'.format(user.first_name)
+
+        send_mail(
+            subject,
+            message,
+            settings.EMAIL_HOST_USER,
+            [profile.email],
+            fail_silently=False,
+        )
 
 
 post_save.connect(createProfile, sender=User)

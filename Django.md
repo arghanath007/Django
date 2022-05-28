@@ -687,8 +687,57 @@ class Meta:
 > otherwise show link to login form.
 
 
+# Sending Emails from Django
+
+#  Email Credentials and Reset Password
+
+
+## Email Credentials
+
+
+from django.core.mail import send_mail
+
+**settings.py**
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = '587'
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'pythondjangotesting@gmail.com'
+EMAIL_HOST_PASSWORD = 'syyewmkzekvqfyrl'   <!-- Generated App Password -->
+
+
+
+**signals.py**
+
+subject = 'Welcome to DevSearch'
+message = 'Welcome to DevSearch, {}!'.format(user.first_name)
+
+    send_mail(
+        subject,
+        message,
+        settings.EMAIL_HOST_USER,
+        [profile.email],
+        fail_silently=False,
+    )
 
         
+## Reset Password Workflow
+
+path('reset_password/', PasswordResetView.as_view(template_name='reset_password.html'),
+        name='reset_password'),
+
+path('reset_password_sent/',
+        PasswordResetDoneView.as_view(template_name='reset_password_sent.html'), name='password_reset_done'),
+
+path('reset/<uidb64>/<token>/', PasswordResetConfirmView.as_view(template_name='reset.html'),
+        name='password_reset_confirm'),
+
+path('reset_password_complete/', PasswordResetCompleteView.as_view(template_name='reset_password_complete.html'),
+        name='password_reset_complete'),
+
+
+> The above paths are the paths for the reset password workflow. 'template_name='reset_password.html'' is the template that is being rendered for that page.
 
 
 # Starting Tomorrow

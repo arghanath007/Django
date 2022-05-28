@@ -1,17 +1,30 @@
+from django.conf.urls.static import static
+from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
+from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 
 # For getting  the 'MEDIA_URL' and 'MEDIA_ROOT' from the 'settings.py' file.
-from django.conf import settings
 
 # This will create a new url for the static files.
-from django.conf.urls.static import static
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('projects/', include('projects.urls')),
     path('', include('users.urls')),
+
+    path('reset_password/', PasswordResetView.as_view(template_name='reset_password.html'),
+         name='reset_password'),
+
+    path('reset_password_sent/',
+         PasswordResetDoneView.as_view(template_name='reset_password_sent.html'), name='password_reset_done'),
+
+    path('reset/<uidb64>/<token>/', PasswordResetConfirmView.as_view(template_name='reset.html'),
+         name='password_reset_confirm'),
+
+    path('reset_password_complete/', PasswordResetCompleteView.as_view(template_name='reset_password_complete.html'),
+         name='password_reset_complete'),
 
 ]
 

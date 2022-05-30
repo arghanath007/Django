@@ -1,9 +1,8 @@
-p**Django Docs** -> https://docs.djangoproject.com/en/4.0/
+**Django Docs** -> https://docs.djangoproject.com/en/4.0/
 **Django REST Framework Docs(DRF)** -> https://www.django-rest-framework.org/
 
 **Video Link** -> https://www.youtube.com/watch?v=PtQiiknWUcI&t=26s(1hr and 4mins done)
 
-**Course Link** -> Views and Serializers(part 3 completed)
 
 ## To setup a Django Project
 
@@ -48,9 +47,13 @@ Django uses the MVT design pattern. The difference from MVC is that Django takes
 
 All of the views are going to be handled inside the views.py file from the app(base) that we created.
 
+## python manage.py startapp challenges
+
+> This is going to create a new app called 'challenges' in the project.
+
 # Template Inheritance
 
->
+>{% extends "base.html" %}
 
 ## Templates
 
@@ -204,6 +207,8 @@ validated_data -> This carries the new values
 # ASGI -> Asynchronous Server Gateway Interface
 
 # Apps
+
+> Apps are the individual parts of the project. They are the building blocks of the overall project. "Apps" can be called as "Modules" in Django.
 
 ## models.py
 
@@ -742,4 +747,4 @@ path('reset_password_complete/', PasswordResetCompleteView.as_view(template_name
 
 # Starting Tomorrow
 
-# 11 Sending Emails & Password Reset(video 1)
+# 12 Building an API(video 1)

@@ -144,6 +144,10 @@ return JsonResponse(data) -> Converted the dictionary into JSON format with "Jso
 
 # Django REST Framework(DRF)
 
+
+> Resource -> https://www.youtube.com/watch?v=c708Nf0cHrs 
+> Time -> 31:17 mins
+
 > Two concepts in DRF are:
 
 1. Serializations -> Converting the **Complex Datatype**(movies=Movie.objects.all()) into **Python Native Datatype(Python Dictionary)**. After this we have to pass this dictionary in the form of JSON response. If we have to deliver information to the user, we are serializing.

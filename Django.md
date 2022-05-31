@@ -91,6 +91,28 @@ All of the views are going to be handled inside the views.py file from the app(b
 2. Create the template.
 3. Add the URL in the urls.py file
 
+ @api_view(['GET', 'POST'])
+ def MovieList(request):
+    if request.method == 'GET':
+        movies = Movie.objects.all()
+        <!-- serializer=MovieSerializer(movies) -->
+        serializer = MovieSerializer(movies, many=True)
+        return Response(serializer.data)
+
+    if request.method == 'POST':
+        serializer = MovieSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+
+        else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+> Example.
+
+
+
 # Class Based View(CBV)
 
 **Steps to create a View(Class Based View)**
@@ -99,6 +121,26 @@ All of the views are going to be handled inside the views.py file from the app(b
 2. Create the view.
 3. Create the template.
 4. Add the URL in the urls.py file
+
+
+class MovieListAV(APIView):
+
+    def get(self, request):
+        movies = Movie.objects.all()
+        serializer = MovieSerializer(movies, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = MovieSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+> Example
 
 ## Migrations
 
@@ -144,9 +186,15 @@ return JsonResponse(data) -> Converted the dictionary into JSON format with "Jso
 
 # Django REST Framework(DRF)
 
-
 > Resource -> https://www.youtube.com/watch?v=c708Nf0cHrs 
 > Time -> 31:17 mins
+
+## Steps to creating a REST API in DRF:-
+
+1) Create the model in the models.py file.
+2) Create the serializer in the serializers.py file.
+3) Create the view in the views.py file.
+4) Create the URLs for the views in the urls.py file.
 
 > Two concepts in DRF are:
 
@@ -161,15 +209,96 @@ return JsonResponse(data) -> Converted the dictionary into JSON format with "Jso
 
 2. DeSerializations -> When we need to get information from the user and store it in a database, during that part we need to deserialize the data. We get the data in the form of JSON and we convert it into a dictionary and then we have to deserialize it(dictionary) into **Complex Datatype** and store it in the database.
 
+
+## Serializers
+
+**from rest_framework import serializers**
+
+**from movielist_app.models import Movie**
+
+
+class MovieSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    name = serializers.CharField()
+    description = serializers.CharField()
+    active = serializers.BooleanField()
+
+
+
+@api_view(['GET','POST'])
+def MovieList(request):
+    if request.method == 'GET':
+        movies=Movie.objects.all()
+        # serializer=MovieSerializer(movies)
+        serializer=MovieSerializer(movies, many=True)
+        return Response(serializer.data)
+
+
+> When we have multiple objects, we have to use the **many=True** option otherwise we will get an error.
+
+
+## ModelSerializer
+
+> It contains everything about the 'create, 'update' operation and about the fields. So we don't have to write everything. We need to mention which model(Movie) we are using and what type of fields are needed.
+
+
+# Validation
+
+Three Types:-
+
+**Field Level Validation**
+**Object Level Validation**
+**Validators**
+
+
+## Field Level Validation
+
+def validate_name(self, value):
+
+    if len(value) < 2:
+        raise serializers.ValidationError("Name must be at least 2 characters long.")
+    else:
+        return value
+
+
+## Object Level Validation
+
+def validate(self, value):
+    if value['name'] == value['description']:
+        raise serializers.ValidationError(
+            "Title and description must be different.")
+
+    return value
+
+
+## Validators
+
+def name_length(value):
+    if len(value) < 2:
+        raise serializers.ValidationError(
+            "Name must be at least 2 characters long")
+
+
+> 'name_length' is a validator function which is used to validate the 'name' field in the 'MovieSerializer'.
+
+
+class MovieSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    name = serializers.CharField(validators=[name_length])  # validators
+    description = serializers.CharField()
+    active = serializers.BooleanField()
+
+
+
 # CRUD Operations
 
 ## GET request
 
-> GET request is used to get the data from the database and send/show it to the user. We are going to return the response as the user needs information from the database
+> GET request is used to get the data from the database and send/show it to the user. We are going to return the response as the user needs information from the database.
 
 ## POST request
 
-> If we get POST request which means user is sending some information and we need to store it in the database.
+> If we get POST request which means user is sending some information and we need to store it in the database.  The 'def create()' function in serializers.py file is called/used for the 'POST' request.
 
 This is for POST request
 
@@ -178,7 +307,7 @@ This is for POST request
 
 ## PUT request
 
-> If we get PUT request then we are updating all of the fields/columns of that row of data in the database. We rewrite everything.
+> If we get PUT request then we are updating all of the fields/columns of that row of data in the database. We rewrite everything. The 'def update()' function in serializers.py file is called/used for the 'PUT' request.
 
     def update(self, instance, validated_data):
             instance.name=validated_data.get('name', instance.name)
@@ -751,4 +880,7 @@ path('reset_password_complete/', PasswordResetCompleteView.as_view(template_name
 
 # Starting Tomorrow
 
-# 12 Building an API(video 1)
+# 12 Building an API(video 1) (Put on Hold, Coming Soon)
+
+# 5. Views and Serializers(Video 9)
+

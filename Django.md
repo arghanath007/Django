@@ -242,6 +242,39 @@ def MovieList(request):
 > It contains everything about the 'create, 'update' operation and about the fields. So we don't have to write everything. We need to mention which model(Movie) we are using and what type of fields are needed.
 
 
+## Creating a new field in a serializer
+
+watchlist = WatchListSerializer(many=True, read_only=True)  
+
+
+> From models.py file
+
+platform = models.ForeignKey(
+        StreamPlatform, on_delete=models.CASCADE, related_name="watchlist")
+
+
+>Created a new field, which contains all the elements regarding the watchlist. If the stream platform selected is 'Netflix' then this contains all the shows, movies which are available on Netflix currently. 'watchlist' name is pretty importance as the name should be same as the 'related_name' which was given when setting up the relationship between the models.
+
+
+## Serializer Relations
+
+watchlist = serializers.StringRelatedField(many=True)
+
+>This is a string related field. which will return whatever this('__str__') functions returns from the model.
+
+
+> In views.py file for get request.
+serializer = StreamPlatformSerializer(platforms, many=True, context={'request': request})
+
+> In serializers.py file
+watchlist = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='movie-detail')
+
+
+> From urls.py file
+path('list/<int:pk>', WatchListDetailAV.as_view(), name='movie-detail')
+
+>  view_name='movie-detail' -> This is the name of the url which is used to render the view.
+
 # Validation
 
 Three Types:-
@@ -419,7 +452,13 @@ validated_data -> This carries the new values
 
 > Overrides the default behaviour of Django and gives the unique id for the data. 'editable=False' means that the id cannot be edited in a form. 'primary_key=True' means that the id is the primary key. We are overriding the default 'id' field given by the Django Model and using uuids instead.
 
-## Database Relationships
+## Django model Relationships
+
+Three types of relationships
+
+1) *One to One* -> platform = models.ForeignKey(StreamPlatform, on_delete=models.CASCADE, related_name="watchlist")
+2) *One to Many*
+3) *Many to Many*
 
 ### project= models.ForeignKey(Project, on_delete=models.CASCADE)
 
@@ -882,5 +921,5 @@ path('reset_password_complete/', PasswordResetCompleteView.as_view(template_name
 
 # 12 Building an API(video 1) (Put on Hold, Coming Soon)
 
-# 5. Views and Serializers(Video 9)
+# 5. Views and Serializers(Video 18)
 

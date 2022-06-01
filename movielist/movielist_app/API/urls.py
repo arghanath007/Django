@@ -1,13 +1,34 @@
 from django.urls import path, include
 # from movielist_app.API.views import MovieList, MovieDetail  # Function Based View
 # Class Based View
-from movielist_app.API.views import WatchListListAV, WatchListDetailAV, StreamPlatformListAV
+from movielist_app.API.views import WatchListListAV, WatchListDetailAV, StreamPlatformListAV, SteamPlatformDetailsAV, ReviewList, ReviewDetail
 
 
 urlpatterns = [
-    path('list/', WatchListListAV.as_view(), name='movie-list'),
-    path('<int:pk>', WatchListDetailAV.as_view(), name='movie-detail'),
+    path('list/', WatchListListAV.as_view(), name='Watch-List'),
+    path('list/<int:pk>', WatchListDetailAV.as_view(), name='WatchList-detail'),
 
-    path('platform/', StreamPlatformListAV.as_view(), name='platform-list'),
+    path('platform/', StreamPlatformListAV.as_view(), name='StreamPlatform-list'),
+    path('platform/<int:pk>', SteamPlatformDetailsAV.as_view(),
+         name='StreamPlatform-detail'),
+
+    path('platform/<int:pk>/reviews', ReviewList.as_view(), name='Review-list'),
+    path('platform/reviews/<int:pk>',
+         ReviewDetail.as_view(), name='Review-list'),
+
+
+
+
+
+
+
+    # path('reviews/', ReviewListAV.as_view(), name='Review-list'),
+    # path('reviews/<int:pk>', ReviewDetailsAV.as_view(), name='Review-detail'),
+
+    # path('review', ReviewList.as_view(), name='Reviews'),
+    # path('review/<int:pk>', ReviewDetail.as_view(), name='Reviews-detail')
+
+    # path('platform/<int:pk>', SteamPlatformDetailsAV.as_view(),
+    #     name='streamplatform-detail'),  # For 'serializers.HyperlinkedModelSerializer'.
 
 ]

@@ -1,7 +1,10 @@
+from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
+from rest_framework.exceptions import ValidationError
 # from rest_framework.decorators import api_view
-from rest_framework import status, mixins, generics
+from rest_framework import status, mixins, generics, viewsets
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 
 from movielist_app.models import WatchList, StreamPlatform, Review
 from movielist_app.API.serializers import WatchListSerializer, StreamPlatformSerializer, ReviewSerializer
@@ -163,11 +166,15 @@ class ReviewDetailsAV(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class ReviewList(generics.ListCreateAPIView):
+class ReviewList(generics.ListAPIView):
+
     # queryset = Review.objects.all()
     serializer_class = ReviewSerializer
 
-    # Overriding the default queryset.
+    # Only authenticated users can access this view
+    permission_classes = [IsAuthenticated]
+
+    # Overriding the default queryset. 'pk' is the primary key of the entertainment(WatchList) Model.
     def get_queryset(self):
         pk = self.kwargs['pk']
         reviews = Review.objects.filter(watchlist=pk)
@@ -177,7 +184,75 @@ class ReviewList(generics.ListCreateAPIView):
 class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
+
+class ReviewCreate(generics.CreateAPIView):
+    # queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+
+    def perform_create(self, serializer):
+        pk = self.kwargs['pk']
+
+        # Getting the WatchList object for which we are writing the review.
+        watchlist = WatchList.objects.get(pk=pk)
+
+        currentUser = self.request.user  # Currently logged in user.
+        currentUserReviewed = Review.objects.filter(
+            watchlist=watchlist, reviewer=currentUser)
+
+        # Restricting the Reviewer to write only one review per WatchList.
+        if currentUserReviewed.exists():
+            raise ValidationError(
+                f'You have already reviewed {watchlist.title} ')
+
+        serializer.save(watchlist=watchlist, reviewer=currentUser)
+
+    def get_queryset(self):
+        return Review.objects.all()
+
+
+#! ModelViewSet
+
+class Stream_Platform(viewsets.ModelViewSet):
+    queryset = StreamPlatform.objects.all()
+    serializer_class = StreamPlatformSerializer
+
+
+#! viewsets and Routers
+
+# class Stream_Platform(viewsets.ViewSet):
+
+#     def list(self, request):  # Get All the Streaming Platforms
+
+#         streamPlatforms = StreamPlatform.objects.all()
+#         serializer = StreamPlatformSerializer(streamPlatforms, many=True)
+#         return Response(serializer.data)
+
+#     def retrieve(self, request, pk=None):  # Get details of a particular Streaming Platform
+
+#         streamPlatforms = StreamPlatform.objects.all()
+#         streamPlatform = get_object_or_404(streamPlatforms, pk=pk)
+#         serializer = StreamPlatformSerializer(streamPlatform)
+#         return Response(serializer.data)
+
+#     def create(self, request):
+#         serialize = StreamPlatformSerializer(data=request.data)
+#         if serialize.is_valid():
+#             serialize.save()
+#             return Response(serialize.data)
+
+#         else:
+#             return Response(serialize.errors)
+
+
+#! ReadOnlyModelViewSet
+# class Stream_Platform(viewsets.ReadOnlyModelViewSet):
+#     queryset = StreamPlatform.objects.all()
+#     serializer_class = StreamPlatformSerializer
+
+
+#! Generic APIView and Mixins
 
 # 'mixins.ListModelMixin' for performing GET operations. 'mixins.CreateModelMixin' for performing POST operations.
 # class ReviewList(mixins.ListModelMixin,
@@ -192,7 +267,6 @@ class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
 
 #     def post(self, request, *args, **kwargs):
 #         return self.create(request, *args, **kwargs)
-
 
 # class ReviewDetail(mixins.RetrieveModelMixin, generics.GenericAPIView):
 #     queryset = Review.objects.all()

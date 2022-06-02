@@ -921,5 +921,5 @@ path('reset_password_complete/', PasswordResetCompleteView.as_view(template_name
 
 # 12 Building an API(video 1) (Put on Hold, Coming Soon)
 
-# 5. Views and Serializers(Video 18)
+# 7. Permissions(video 2)
 

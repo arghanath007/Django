@@ -19,4 +19,7 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('entertainment/', include('movielist_app.API.urls')),
+
+
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]

@@ -7,9 +7,13 @@ from movielist_app.models import WatchList, StreamPlatform, Review
 
 
 class ReviewSerializer(serializers.ModelSerializer):
+
+    reviewer = serializers.StringRelatedField(read_only=True)
+
     class Meta:
         model = Review
-        fields = '__all__'
+        # fields = '__all__'
+        exclude = ['watchlist']
 
 
 class WatchListSerializer(serializers.ModelSerializer):

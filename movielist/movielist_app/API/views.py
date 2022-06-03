@@ -8,6 +8,7 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 
 from movielist_app.models import WatchList, StreamPlatform, Review
 from movielist_app.API.serializers import WatchListSerializer, StreamPlatformSerializer, ReviewSerializer
+from movielist_app.API.permission import isAdminOrReadOnly, ReviewUserOrReadOnly
 
 
 #! Class Based View
@@ -184,7 +185,8 @@ class ReviewList(generics.ListAPIView):
 class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    # permission_classes = [IsAuthenticatedOrReadOnly]
+    # permi ion_classes = [ReviewUserOrReadOnly]
 
 
 class ReviewCreate(generics.CreateAPIView):
@@ -206,6 +208,18 @@ class ReviewCreate(generics.CreateAPIView):
             raise ValidationError(
                 f'You have already reviewed {watchlist.title} ')
 
+        if watchlist.total_rating == 0:
+            # 'serializer.validated_data['rating']' contains the rating value of the newly created review.
+            watchlist.average_rating = serializer.validated_data['rating']
+
+        else:
+            # Calculating the new average rating.
+            watchlist.average_rating = (
+                watchlist.average_rating + serializer.validated_data['rating'])/2
+
+        # Updating the total_rating and average_rating and saving them to the WatchList Model.
+        watchlist.total_rating += 1
+        watchlist.save()
         serializer.save(watchlist=watchlist, reviewer=currentUser)
 
     def get_queryset(self):

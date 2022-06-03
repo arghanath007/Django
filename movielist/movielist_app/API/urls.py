@@ -15,18 +15,18 @@ router.register('platform', Stream_Platform,
 
 urlpatterns = [
     path('list/', WatchListListAV.as_view(), name='Watch-List'),
-    path('list/<int:pk>', WatchListDetailAV.as_view(), name='WatchList-detail'),
+    path('list/<int:pk>/', WatchListDetailAV.as_view(), name='WatchList-detail'),
 
     #     path('platform/', StreamPlatformListAV.as_view(), name='StreamPlatform-list'),
     #     path('platform/<int:pk>', SteamPlatformDetailsAV.as_view(),
     #          name='StreamPlatform-detail'),
 
-    path('platform/<int:pk>/create-reviews',
+    path('<int:pk>/create-reviews/',
          ReviewCreate.as_view(), name='Review-Create'),
 
-    path('platform/<int:pk>/reviews', ReviewList.as_view(), name='Review-list'),
+    path('<int:pk>/reviews/', ReviewList.as_view(), name='Review-list'),
 
-    path('platform/reviews/<int:pk>',
+    path('reviews/<int:pk>/',
          ReviewDetail.as_view(), name='Review-list'),
 
 

@@ -19,6 +19,8 @@ class WatchList(models.Model):
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=200)
     active = models.BooleanField(default=True)
+    average_rating = models.FloatField(default=0)
+    total_rating = models.IntegerField(default=0)
 
     # This is a Many(Entertainment) to One(Platform) Relationship. As a entertainment(WatchList) Model has many movies which are connected/linked to one platform.
     platform = models.ForeignKey(

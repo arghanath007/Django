@@ -680,11 +680,62 @@ DEBUG = False
 
 > This gives us all the values(skills) that have an empty description. '_set.filter' means that we are filtering the skills that have an empty description. Gives us all the skills that have an empty string as the description are stored here(otherSkills).
 
+
+# Permission
+
+> If a user can access a certain page or not is controlled by permissions.
+
+
+## Custom Permissions
+
+from rest_framework import permissions
+
+
+class isAdminOrReadOnly(permissions.IsAdminUser):
+
+>Checking to see if the user has Admin permissions or not. If the user is an Admin or not. If the user is Admin, we need to return True otherwise return false. The Admin has access to DELETE, PUT and POST methods. The normal or not logged in user has access to GET method only or Read only.
+
+    def has_permission(self, request, view):
+        # adminPermission = super().has_permission(request, view)
+        adminPermission = bool(request.user and request.user.is_staff)
+        return request.method == 'GET' or adminPermission
+
+
+>'has_object_permission()', here we are specifically checking a particular object. So an individual review object can be edited by it's own owner only.
+
+>'has_permission()', We are generally checking if the user has permission to read or anything else.
+
+
+def has_permission(self, request, view):
+
+    if request.method in permissions.SAFE_METHODS:
+        return True
+    else:
+
+        return bool(request.user and request.user.is_staff)
+
+>If the user is Admin, then return True as well. If the method is 'GET' then return True. If the user is not an Admin, then return False.
+
+
+**Reviewer can only edit his reviews**
+
+class ReviewUserOrReadOnly(permissions.BasePermission):
+
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:  # 'SAFE_METHODS' is 'GET' request.
+            return True
+        else:
+            # We are checking if the 'reviewer'(obj.reviewer) is the same as the currently logged in user(request.user). Then we are returning True.
+            return obj.reviewer == request.user
+
+
 # Login, Logout User
 
 ## Authentication
 
-> Authentication is simply determining who a user is. We are trying to identify a particular user. Login form. Authentication is, who is the user?
+> Authentication is simply determining who a user is. We are trying to identify a particular user. Login form. Authentication is, who is the user? 
+
+> It proves that a user is logged ir or a user is a valid user.
 
 ## Authorization
 

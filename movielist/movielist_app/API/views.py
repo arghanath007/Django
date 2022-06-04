@@ -186,7 +186,7 @@ class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     # permission_classes = [IsAuthenticatedOrReadOnly]
-    # permi ion_classes = [ReviewUserOrReadOnly]
+    permission_classes = [ReviewUserOrReadOnly]
 
 
 class ReviewCreate(generics.CreateAPIView):

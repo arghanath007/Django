@@ -737,6 +737,14 @@ class ReviewUserOrReadOnly(permissions.BasePermission):
 
 > It proves that a user is logged ir or a user is a valid user.
 
+### Token Authentication
+
+> In settings.py, we are adding the 'rest_framework.authtoken' to the INSTALLED_APPS.
+
+'rest_framework.authtoken',
+
+>Using this(app) to create a new table inside the database known as token. For each individual user, we are going to store a token.
+
 ## Authorization
 
 > Authorization is simply determining what a user is allowed to do on the website. We are trying to determine if a particular user is allowed to do something. Example, restricting unauthorized users only to a few pages. Some pages will be authorized to logged in users only. Restricting access based on the role of the user in the website like Admin, Manager, Developer, General-User etc.
@@ -972,5 +980,5 @@ path('reset_password_complete/', PasswordResetCompleteView.as_view(template_name
 
 # 12 Building an API(video 1) (Put on Hold, Coming Soon)
 
-# 7. Permissions(video 2)
+# 10. Token Authentication(video 6)
 

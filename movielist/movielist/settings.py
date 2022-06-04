@@ -40,6 +40,8 @@ INSTALLED_APPS = [
 
     'movielist_app',
     'rest_framework',
+    # Using this to create a new table inside the database known as token. For each individual user, we are going to store a token.
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -131,5 +133,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # REST_FRAMEWORK = {
 #     'DEFAULT_PERMISSION_CLASSES': [
 #         'rest_framework.permissions.IsAuthenticated',
-#     ]
+#     ],
+#     'DEFAULT_AUTHENTICATION_CLASSES': [
+#         'rest_framework.authentication.BasicAuthentication',
+
 # }
+
+
+# Token Authentication
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}

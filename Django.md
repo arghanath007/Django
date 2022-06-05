@@ -976,6 +976,13 @@ path('reset_password_complete/', PasswordResetCompleteView.as_view(template_name
 > The above paths are the paths for the reset password workflow. 'template_name='reset_password.html'' is the template that is being rendered for that page.
 
 
+# JWT (JSON Web Token)
+
+SimpleJWT -> https://django-rest-framework-simplejwt.readthedocs.io/en/latest/index.html
+JWT -> https://jwt.io/
+
+
+
 # Starting Tomorrow
 
 # 12 Building an API(video 1) (Put on Hold, Coming Soon)

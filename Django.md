@@ -980,5 +980,5 @@ path('reset_password_complete/', PasswordResetCompleteView.as_view(template_name
 
 # 12 Building an API(video 1) (Put on Hold, Coming Soon)
 
-# 10. Token Authentication(video 6)
+# 12. JWT Authentication(video 3)
 

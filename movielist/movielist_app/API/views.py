@@ -181,7 +181,7 @@ class ReviewList(generics.ListAPIView):
     serializer_class = ReviewSerializer
 
     # Only authenticated users can access this view
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     # Overriding the default queryset. 'pk' is the primary key of the entertainment(WatchList) Model.
     def get_queryset(self):

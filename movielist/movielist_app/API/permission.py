@@ -24,11 +24,11 @@ class isAdminOrReadOnly(permissions.IsAdminUser):
             return bool(request.user and request.user.is_staff)
 
 
-class ReviewUserOrReadOnly(permissions.BasePermission):
+class IsReviewerOrAdminOtherwiseReadOnly(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:  # 'SAFE_METHODS' is 'GET' request.
             return True
         else:
-            # We are checking if the 'reviewer'(obj.reviewer) is the same as the currently logged in user(request.user). Then we are returning True.
-            return obj.reviewer == request.user
+            # We are checking if the 'reviewer'(obj.reviewer) is the same as the currently logged in user(request.user) or if the logged in user is an 'Admin', then we are returning True. Otherwise return false.
+            return obj.reviewer == request.user or request.user.is_staff

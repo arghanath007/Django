@@ -1,6 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
+from rest_framework import status
 
 
 from user_app.API.serializers import RegistrationSerializer
@@ -9,7 +10,7 @@ from user_app.API.serializers import RegistrationSerializer
 from user_app.models import create_auth_token
 
 
-@api_view(['GET', 'POST'])
+@api_view(['POST'])
 def registration_view(request):
 
     if request.method == 'POST':
@@ -31,6 +32,15 @@ def registration_view(request):
             context['token'] = token
 
         else:
-            context = serializer.errors
+            context['error'] = serializer.errors
 
         return Response(context)
+
+
+@api_view(['POST'])
+def logout_view(request):
+
+    # 'user' is the currently logged in user.
+    if request.method == 'POST':
+        request.user.auth_token.delete()  # Delete the token of the user.
+        return Response(status=status.HTTP_200_OK)

@@ -2,12 +2,13 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 from user_app.API.serializers import RegistrationSerializer
 
-# This import is needed to generate the token when user registers.
-from user_app.models import create_auth_token
+#! This import is needed to generate the token when user registers.
+# from user_app.models import create_auth_token
 
 
 @api_view(['POST'])
@@ -26,10 +27,19 @@ def registration_view(request):
             context['username'] = account.username
             context['email'] = account.email
 
-            # Authentication Token of the user which is created.
-            token = Token.objects.get(user=account).key
+            #! Authentication Token of the user which is created.  For Token Authentication.
+            # token = Token.objects.get(user=account).key
 
-            context['token'] = token
+            # context['token'] = token
+
+            #! Creating Token Manually. For JWT Authentication.
+
+            refresh = RefreshToken.for_user(account)
+
+            context['token'] = {
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+            }
 
         else:
             context['error'] = serializer.errors

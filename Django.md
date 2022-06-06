@@ -982,6 +982,17 @@ SimpleJWT -> https://django-rest-framework-simplejwt.readthedocs.io/en/latest/in
 JWT -> https://jwt.io/
 
 
+> Each JWT token is unique for each user itself.
+
+
+## Advantage
+
+> It is not dependent on database for every request. Controlling the information and reducing load on the database.
+
+## Disadvantage
+
+> Caching information and storing it in the local storage for next five minutes. We cannot revoke the created access token even if we want to. Which means for the next five minutes, we cannot revoke the access. 
+    >In case of **Token authentication**, we had the power to revoke the access by removing/deleting the token from the database.
 
 # Starting Tomorrow
 

@@ -998,5 +998,11 @@ JWT -> https://jwt.io/
 
 # 12 Building an API(video 1) (Put on Hold, Coming Soon)
 
-# 12. JWT Authentication(video 3)
+# 12. JWT Authentication Completed
+
+> Skipping 13,14,15 which are Throttling, Filtering, Searching, Pagination.
+
+# 16. Automated API Testing(video 1)
+
+
 

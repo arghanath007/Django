@@ -1,51 +1,44 @@
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from rest_framework import generics, permissions, mixins
-
-from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework.views import APIView
+from rest_framework import status
+from django.contrib.auth import authenticate
 
 
-from users_app.API.serializers import RegisterSerializer, UserSerializer
+from users_app.API.serializers import UserRegistrationSerializer, UserLoginSerializer
 
 
-@api_view(['GET'])
-def getRoutes(request):
-
-    routes = [
-        'login',
-        'login/refresh',
-    ]
-
-    return Response(routes)
+#! Registration User
 
 
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
+class UserRegistrationView(APIView):
 
-        # Add custom claims
-        token['username'] = user.username
-        token['email'] = user.email
+    def post(self, request, format=None):
 
-        return token
+        serializer = UserRegistrationSerializer(data=request.data)
 
+        if serializer.is_valid(raise_exception=True):
+            user = serializer.save()
+            return Response({'message': 'User created successfully.'}, status=status.HTTP_201_CREATED)
 
-class MyTokenObtainPairView(TokenObtainPairView):
-    serializer_class = MyTokenObtainPairSerializer
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-#! Registration
+class UserLoginView(APIView):
 
-class Register(generics.GenericAPIView):
-    serializer_class = RegisterSerializer
+    def post(self, request, format=None):
 
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.save()
-        return Response({
-            "user": UserSerializer(user, context=self.get_serializer_context()).data,
-            "message": "User registered successfully!"
-        })
+        serializer = UserLoginSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            email = serializer.data.get('email')
+            password = serializer.data.get('password')
+
+            #! Authenticating the User
+            user = authenticate(email=email, password=password)
+
+            if user is not None:
+                return Response({'message': 'User logged in successfully.'}, status=status.HTTP_200_OK)
+
+            else:
+                return Response({'errors': {'non_field_errors': ['Email or password is not valid']}}, status=status.HTTP_404_NOT_FOUND)
+
+        return Response(serializer.errors, status=status.HTTP_200_OK)

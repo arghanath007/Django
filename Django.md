@@ -1006,3 +1006,11 @@ JWT -> https://jwt.io/
 
 
 
+# DRF with JWT
+
+Link -> https://www.youtube.com/watch?v=lo7lBD9ynVc
+
+Time -> 1:29:52(mins)
+
+
+

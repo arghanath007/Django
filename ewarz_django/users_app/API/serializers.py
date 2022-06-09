@@ -1,30 +1,39 @@
-import imp
 from rest_framework import serializers
-from rest_framework.permissions import IsAuthenticated
-from django.db import models
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate
-from django.contrib.auth.hashers import make_password
+from users_app.models import User
 
 
-#! Registration
-class RegisterSerializer(serializers.ModelSerializer):
+class UserRegistrationSerializer(serializers.ModelSerializer):
+
+    password2 = serializers.CharField(
+        style={'input_type': 'password'}, write_only=True)
+
     class Meta:
         model = User
-        fields = ['id', 'username', 'email',
-                  'password', 'first_name', 'last_name']
-        extra_kwargs = {'password': {'write_only': True}}
+        fields = ['email', 'name', 'tc', 'password', 'password2']
 
-    # For POST request.
+        extra_kwargs = {
+            'password': {'write_only': True},
+        }
+
+    #! Validation password and password2 while registration. This will be called with .is_valid() in views.py file.
+    def validate(self, data):
+
+        password = data.get('password')
+        password2 = data.get('password2')
+
+        if password != password2:
+            raise serializers.ValidationError("Passwords must match.")
+        return data
+
     def create(self, validated_data):
-        user = User.objects.create_user(validated_data['username'], email=validated_data['email'],
-                                        password=validated_data['password'], first_name=validated_data['first_name'], last_name=validated_data['last_name'])
-
-        return user
+        return User.objects.create_user(**validated_data)
 
 
-#! User serializer
-class UserSerializer(serializers.ModelSerializer):
+#! User Login Serializer.
+class UserLoginSerializer(serializers.ModelSerializer):
+
+    email = serializers.EmailField(max_length=255)
+
     class Meta:
         model = User
-        fields = '__all__'
+        fields = ['email', 'password']

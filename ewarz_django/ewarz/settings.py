@@ -42,11 +42,12 @@ INSTALLED_APPS = [
     # Apps
     'users_app.apps.UsersAppConfig',
 
-    # SimpleJWT
-    'rest_framework_simplejwt.token_blacklist',
-
     # Django REST Framework
     'rest_framework',
+
+    # SimpleJWT
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
 
     # CORS Headers
     "corsheaders",
@@ -57,6 +58,10 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+
+    # CORS Headers
+    "corsheaders.middleware.CorsMiddleware",
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -65,9 +70,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    # CORS Headers
-    "corsheaders.middleware.CorsMiddleware",
-    "django.middleware.common.CommonMiddleware",
+
 ]
 
 ROOT_URLCONF = 'ewarz.urls'
@@ -144,10 +147,15 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+#! Making Django use the 'CustomUser' model instead of the default 'User' model.
+AUTH_USER_MODEL = 'users_app.User'
+
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+    # 'DEFAULT_RENDERER_CLASSES': ('rest_framework.renderers.JSONRenderer',),
 }
 
 SIMPLE_JWT = {
@@ -181,3 +189,9 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
+
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
